@@ -11,9 +11,9 @@ def a_plus_abs_b(a, b):
     5
     """
     if b < 0:
-        f = a-b
+        f = sub
     else:
-        f = a+b
+        f = add
     return f(a, b)
 
 
@@ -48,17 +48,12 @@ def largest_factor(n):
     1
     """
     "*** YOUR CODE HERE ***"
-    i=j=1
-    while i<n:
-        if n%i==0:
-            j=i
-            i=i+1
-        else:
-            i=i+1
-    return j
-
-
-
+    i = 1
+    while i < n:
+        if n % i == 0:
+            k = i
+        i = i + 1
+    return k
 
 def if_function(condition, true_result, false_result):
     """Return true_result if condition is a true value, and
@@ -120,8 +115,6 @@ def if_function1(condition,true_result,false_result):
 
 def with_if_function1():
     return if_function1(c,t,f)
-
-
 
 
 
