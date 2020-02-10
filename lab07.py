@@ -33,76 +33,6 @@ def scale(s, k):
     for i in s:
         yield i*k
 
-
-# Linked Lists
-
-def link_to_list(link):
-    """Takes a linked list and returns a Python list with the same elements.
-
-    >>> link = Link(1, Link(2, Link(3, Link(4))))
-    >>> link_to_list(link)
-    [1, 2, 3, 4]
-    >>> link_to_list(Link.empty)
-    []
-    """
-    "*** YOUR CODE HERE ***"
-    if link is Link.empty:
-        return []
-    return [link.first] + link_to_list(link.rest)
-
-# Trees
-
-def cumulative_sum(t):
-    """Mutates t so that each node's label becomes the sum of all labels in
-    the corresponding subtree rooted at t.
-
-    >>> t = Tree(1, [Tree(3, [Tree(5)]), Tree(7)])
-    >>> cumulative_sum(t)
-    >>> t
-    Tree(16, [Tree(8, [Tree(5)]), Tree(7)])
-    """
-    "*** YOUR CODE HERE ***"
-    if t.is_leaf():
-        return t
-    for j in t.branches:
-        cumulative_sum(j)
-    t.label = sum([i.label for i in t.branches]) + t.label
-
-def is_bst(t):
-    """Returns True if the Tree t has the structure of a valid BST.
-
-    >>> t1 = Tree(6, [Tree(2, [Tree(1), Tree(4)]), Tree(7, [Tree(7), Tree(8)])])
-    >>> is_bst(t1)
-    True
-    >>> t2 = Tree(8, [Tree(2, [Tree(9), Tree(1)]), Tree(3, [Tree(6)]), Tree(5)])
-    >>> is_bst(t2)
-    False
-    >>> t3 = Tree(6, [Tree(2, [Tree(4), Tree(1)]), Tree(7, [Tree(7), Tree(8)])])
-    >>> is_bst(t3)
-    False
-    >>> t4 = Tree(1, [Tree(2, [Tree(3, [Tree(4)])])])
-    >>> is_bst(t4)
-    True
-    >>> t5 = Tree(1, [Tree(0, [Tree(-1, [Tree(-2)])])])
-    >>> is_bst(t5)
-    True
-    >>> t6 = Tree(1, [Tree(4, [Tree(2, [Tree(3)])])])
-    >>> is_bst(t6)
-    True
-    >>> t7 = Tree(2, [Tree(1, [Tree(5)]), Tree(4)])
-    >>> is_bst(t7) # I don't know why t7 is not a bst
-    False
-    """
-    "*** YOUR CODE HERE ***"
-    if t.is_leaf():
-        return True
-    elif len(t.branches) == 1:
-        return is_bst(t.branches[0])
-    if len(t.branches) == 2:
-        if t.label >= t.branches[0].label and t.label <= t.branches[1].label:
-            return is_bst(t.branches[0]) and is_bst(t.branches[1])
-    return False
-
 # Link List Class
 class Link:
     """A linked list.
@@ -177,3 +107,86 @@ class Tree:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
         return print_tree(self).rstrip()
+# Linked Lists
+
+def link_to_list(link):
+    """Takes a linked list and returns a Python list with the same elements.
+
+    >>> link = Link(1, Link(2, Link(3, Link(4))))
+    >>> link_to_list(link)
+    [1, 2, 3, 4]
+    >>> link_to_list(Link.empty)
+    []
+    """
+    "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return []
+    return [link.first] + link_to_list(link.rest)
+
+# Trees
+
+def cumulative_sum(t):
+    """Mutates t so that each node's label becomes the sum of all labels in
+    the corresponding subtree rooted at t.
+
+    >>> t = Tree(1, [Tree(3, [Tree(5)]), Tree(7)])
+    >>> cumulative_sum(t)
+    >>> t
+    Tree(16, [Tree(8, [Tree(5)]), Tree(7)])
+    """
+    "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return t
+    for j in t.branches:
+        cumulative_sum(j)
+    t.label = sum([i.label for i in t.branches]) + t.label
+
+
+INT_MAX = 4294967296
+INT_MIN = -4294967296
+def is_bst(t):
+    """Returns True if the Tree t has the structure of a valid BST.
+
+    >>> t1 = Tree(6, [Tree(2, [Tree(1), Tree(4)]), Tree(7, [Tree(7), Tree(8)])])
+    >>> is_bst(t1)
+    True
+    >>> t2 = Tree(8, [Tree(2, [Tree(9), Tree(1)]), Tree(3, [Tree(6)]), Tree(5)])
+    >>> is_bst(t2)
+    False
+    >>> t3 = Tree(6, [Tree(2, [Tree(4), Tree(1)]), Tree(7, [Tree(7), Tree(8)])])
+    >>> is_bst(t3)
+    False
+    >>> t4 = Tree(1, [Tree(2, [Tree(3, [Tree(4)])])])
+    >>> is_bst(t4)
+    True
+    >>> t5 = Tree(1, [Tree(0, [Tree(-1, [Tree(-2)])])])
+    >>> is_bst(t5)
+    True
+    >>> t6 = Tree(1, [Tree(4, [Tree(2, [Tree(3)])])])
+    >>> is_bst(t6)
+    True
+    >>> t7 = Tree(2, [Tree(1, [Tree(5)]), Tree(4)])
+    >>> is_bst(t7)
+    False
+    """
+    "*** YOUR CODE HERE ***"
+    if not t:
+        return True
+    def help(t, min = INT_MIN, max = INT_MAX):
+        if not t:
+            return True
+        if t.label < min or t.label > max:
+            return False
+        if len(t.branches) > 2:
+            return False
+        elif len(t.branches) == 2:
+            left, right = t.branches[0], t.branches[1]
+        elif len(t.branches) == 1:
+            if t.branches[0].label > t.label:
+                right, left = t.branches[0], 0
+            else:
+                right, left = 0, t.branches[0]
+        else:
+            left, right = 0, 0
+        return help(left, min, t.label) and help(right, t.label, max)
+    return help(t)
