@@ -28,15 +28,15 @@ def count_frame(f):
     counted.open_count = 0
     counted.max_count = 0
     return counted
-fib = count_frame(f)
+fib = count_frame(fib)
 fib(5)
 frame = fib.max_count
 
 # memoization
 def memo(f):
     cache = {}
-    def memoized(n):
-        if n not in cach:
+    def memorized(n):
+        if n not in cache:
             cache[n] = f(n)
         return cache[n]
     return memorized
